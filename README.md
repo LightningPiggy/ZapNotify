@@ -2,6 +2,10 @@
 
 A webapp (also installable as a Progressive Web App) that activates various notifications (sound, popup,...) when donations ("zaps") come in.
 
+Live demo: https://oink.LightningPiggy.com/
+
+Part of https://LightningPiggy.com/
+
 # How to install and configure
 
 1) Copy the files in this folder to a webserver that supports PHP.
