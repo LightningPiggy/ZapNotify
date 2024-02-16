@@ -1,6 +1,6 @@
-# zap2oink
+# ZapNotify
 
-A webapp (also installable as a Progressive Web App) that activates various notifications (oink sound, popup,...) when donations ("zaps") come in.
+A webapp (also installable as a Progressive Web App) that activates various notifications (sound, popup,...) when donations ("zaps") come in.
 
 # How to install and configure
 
@@ -9,9 +9,9 @@ A webapp (also installable as a Progressive Web App) that activates various noti
 2) Configure the LNURLp extension in an LNBits instance with the following settings:
 - Wallet: choose one of your lnbits wallets
 - Item description: "Donation to LightningPiggy.com" (users will see this in their wallet when they zap)
-- Lightning Address: oink
+- Lightning Address: oink (or whatever you like)
 - Min: 1000 (default value that wallet will show)
-- Max: 100000000
+- Max: 100000000 (is this too low?)
 - Currency: satoshis
 - Comment maximum characters: 255
 - Webhook URL: https://yourwebsite.com/log.php (make sure this points to your own webserver's URL where you installed log.php)
@@ -22,7 +22,7 @@ A webapp (also installable as a Progressive Web App) that activates various noti
 
 Open the webpage where you installed the index.html file, such as: https://yourwebsite.com/
 
-Click the "Enable Zap2Oink notifications!" button to allow the browser to play audio (blocked if the user hasn't interacted with the page) and to start polling (each second) for new donations/zaps.
+Click the "Enable ZapNotify notifications!" button to allow the browser to play audio (blocked if the user hasn't interacted with the page) and to start polling (each second) for new donations/zaps.
 
 # How to test
 
