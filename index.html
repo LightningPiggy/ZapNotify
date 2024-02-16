@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="icon512.png" />
+<title>LightningPiggy's Oink</title>
+<link rel="manifest" href="manifest.json">
+<style>
+  body {
+    font-family: sans-serif;
+    text-align: center;
+  }
+
+  #myButton {
+    display: block;
+    margin: 20px auto; /* Add margin around the button */
+    padding: 20px 40px;
+    font-size: 20px;
+    background-color: pink;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer; /* Change cursor to pointer */
+    transition: background-color 0.3s ease; /* Smooth transition for background color change */
+  }
+
+  #myButton:hover {
+    background-color: #ff4081; /* Change background color on hover */
+  }
+
+  #myButton:active {
+    background-color: #e91e63; /* Change background color on click */
+  }
+
+  #myButton:focus {
+    outline: none; /* Remove default focus outline */
+    box-shadow: 0 0 0 3px rgba(255, 64, 129, 0.5); /* Add custom focus style */
+  }
+
+  .logo {
+    width: 50%;
+    height: auto;
+  }
+
+  .QR {
+    width: 20%;
+  }
+
+  #overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 64, 128, 0.95); /* Semi-transparent background */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Ensure the overlay appears on top of other content */
+  }
+  
+  #overlay-message {
+    font-size: 64px;
+    font-weight: bold;
+    color: black;
+  }
+
+  #notificationarea {
+     color: white;
+  }
+
+  #donations {
+    display: none;
+  }
+</style>
+</head>
+<body>
+  <div id="overlay"><div id='overlay-message'></div></div>
+      
+
+  <img class="logo" src="logo.svg"/>
+  <button id="myButton">Enable Oink audio notifications!</button>
+  <div id="donations">
+  <a href="lightning:LNURL1DP68GURN8GHJ7MR9VAJKUEPWD3HXY6T5WVHXXMMD9AKXUATJD3CZ74RTDFNKZSSNL3E35" class="text-secondary"><img class="QR" src="QR.png"/></a>
+  <h1>Send some Bitcoin to Oink!</h1>
+  </div>
+  <!-- Audio permission: <div id="audiopermission">Unknown</div> -->
+  <div id="notificationarea">New donation: <div id="notification">Empty</div></div>
+  <audio id="notificationSound" src="Pig-Oinking-www.fesliyanstudios.com.mp3"></audio> <!-- Replace "notification_sound.mp3" with the path to your audio file -->
+  
+  
+  <script>
+    // Function to poll the URL for data
+    function pollData(url, interval) {
+      let previousData = null;
+      
+      setInterval(() => {
+        fetch(url)
+          .then(response => response.arrayBuffer())
+          .then(data => {
+            if (previousData !== null) {
+              //console.log("not null");
+              if (!arraysAreEqual(data, previousData)) {
+                //console.log("arrays not equal");
+                displayNotification("Data has changed!");
+      	        const notificationDiv = document.getElementById("notification");
+                notificationDiv.innerText += arrayBufferToString(data);
+	        const jsonFromThirdField = parseThirdFieldAsJSON(arrayBufferToString(data));
+                const amount = getAmountFromJSON(jsonFromThirdField);
+                let comment = getCommentFromJSON(jsonFromThirdField);
+                if (amount !== null) {
+                  console.log('Amount:', amount);
+                } else {
+                  console.log('Failed to get amount from JSON data.');
+                }
+      		displayHelloOverlay(amount, comment);
+              } else {
+                //console.log("arrays equal");
+              }
+            } else {
+                //console.log("previousData is null");
+            }
+                previousData = data;
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+          });
+      }, interval);
+    }
+
+    function parseThirdFieldAsJSON(csvRow) {
+      // Split the CSV row by the pipe delimiter
+      const fields = csvRow.split('|');
+      
+      // Ensure that there are at least three fields
+      if (fields.length < 4) {
+        console.error('Invalid CSV row. It should have at least three fields separated by |.');
+        return null;
+      }
+    
+      // Extract the third field and parse it as JSON
+      const thirdField = fields[3].trim(); // Trim to remove leading and trailing whitespace
+      try {
+        return JSON.parse(thirdField);
+      } catch (error) {
+        console.error('Error parsing JSON from the third field:', error);
+        return null;
+      }
+    }
+
+   function getCommentFromJSON(jsonData) {
+      // Check if jsonData is an object
+      if (typeof jsonData !== 'object' || jsonData === null) {
+        console.error('Invalid JSON data. Expected an object.');
+        return null;
+      }
+    
+      // Check if the "amount" key exists in the JSON object
+      if (!jsonData.hasOwnProperty('comment')) {
+        console.error('No "comment" key found in the JSON object.');
+        return null;
+      }
+    
+      // Get the value of the "amount" key
+      return jsonData.comment;
+    }
+
+
+    function getAmountFromJSON(jsonData) {
+      // Check if jsonData is an object
+      if (typeof jsonData !== 'object' || jsonData === null) {
+        console.error('Invalid JSON data. Expected an object.');
+        return null;
+      }
+    
+      // Check if the "amount" key exists in the JSON object
+      if (!jsonData.hasOwnProperty('amount')) {
+        console.error('No "amount" key found in the JSON object.');
+        return null;
+      }
+    
+      // Get the value of the "amount" key
+      const amountValue = jsonData.amount;
+    
+      // Check if the value is valid
+      if (typeof amountValue !== 'number') {
+        console.error('Invalid value for "amount". Expected a number.');
+        return null;
+      }
+    
+      // Return the amount value
+      return amountValue/1000;
+    }
+
+    function arrayBufferToString(buffer) {
+      const decoder = new TextDecoder('utf-8'); // Assuming the encoding is UTF-8
+      return decoder.decode(buffer);
+    }
+
+    function displayHelloOverlay(amount, comment) {
+      const message = document.getElementById("overlay-message");
+      message.innerHTML = 'Oink! Wow, ' + amount + ' satoshis, thank you so much!';
+      if (comment !== null && comment.length > 0) {
+        message.innerHTML += '<br/><br/>Comment:</br>' + comment;
+      }
+      
+      const overlay = document.getElementById("overlay");
+      overlay.style.display = "flex";
+    
+      // remove the overlay
+      setTimeout(() => {
+        const overlay = document.getElementById("overlay");
+        overlay.style.display = "none";
+      }, 5000);
+    }
+    
+    // Function to display notification
+    function displayNotification(message) {
+      const notificationDiv = document.getElementById("notification");
+      notificationDiv.innerText = message;
+
+      const notificationSound = document.getElementById("notificationSound");
+      notificationSound.play();
+
+    }
+
+    // Function to compare two array buffers
+    function arraysAreEqual(array1, array2) {
+      if (array1.byteLength !== array2.byteLength) {
+        return false;
+      }
+      const view1 = new DataView(array1);
+      const view2 = new DataView(array2);
+      for (let i = 0; i < array1.byteLength; i++) {
+        if (view1.getUint8(i) !== view2.getUint8(i)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    // Start polling
+    const apiUrl = "https://oink.lightningpiggy.com/last.php";
+    const pollingInterval = 1000; // in milliseconds (e.g., every 5 seconds)
+
+    // Function to handle the button click event
+    function buttonClickHandler(event) {
+      event.target.textContent = 'Oink Notifications Are Active! Volume up!';
+      const donationsDiv = document.getElementById('donations');
+      donationsDiv.style.display = "block";
+      pollData(apiUrl, pollingInterval);
+    }
+
+    // Attach the click event listener to the button
+    const myButton = document.getElementById('myButton');
+    myButton.addEventListener('click', buttonClickHandler);
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(registration => {
+            console.log('Service worker registered:', registration);
+          })
+          .catch(error => {
+            console.error('Service worker registration failed:', error);
+          });
+      });
+    }
+
+  </script>
+</body>
+</html>
