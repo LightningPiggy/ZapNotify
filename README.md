@@ -22,7 +22,7 @@ A webapp (also installable as a Progressive Web App) that activates various noti
 
 Open the webpage where you installed the index.html file, such as: https://yourwebsite.com/
 
-Click the "Enable ZapNotify notifications!" button to allow the browser to play audio (blocked if the user hasn't interacted with the page) and to start polling (each second) for new donations/zaps.
+Click the "Enable audio and visual notifications" button to allow the browser to play audio (blocked if the user hasn't interacted with the page) and to start polling (each second) for new donations/zaps.
 
 # How to test
 
