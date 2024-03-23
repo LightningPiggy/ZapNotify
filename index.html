@@ -93,13 +93,16 @@
   
   <script>
     const apiUrl = "wss://legend.lnbits.com/api/v1/ws/c9168d53aa5942858354249f39f18de4";
+    let notificationsActive = false;
+    let socket = null;
 
     // Function to poll the URL for data
     function listenWebsocket(url) {
-      let socket = new WebSocket(url);
+      socket = new WebSocket(url);
 
       socket.onopen = function(e) {
         console.log("[open] Connection established");
+        changeMode(true);
       };
       
       socket.onmessage = function(event) {
@@ -141,10 +144,11 @@
           // event.code is usually 1006 in this case
           console.log('[close] Connection died');
         }
+        changeMode(false);
       };
 
       socket.onerror = function(error) {
-        console.err(`[error]`);
+        console.error(`[websocket error]`);
       };
 
     }
@@ -219,10 +223,21 @@
 
     // Function to handle the button click event
     function buttonClickHandler(event) {
-      event.target.textContent = 'Oink Notifications Are Active! Volume up!';
+      if (!notificationsActive) {
+        document.getElementById('myButton').textContent = 'Connecting websocket...';
+        listenWebsocket(apiUrl);
+      } else {
+        document.getElementById('myButton').textContent = 'Closing websocket...';
+        socket.close();
+      }
+    }
+
+    function changeMode(active) {
       const donationsDiv = document.getElementById('donations');
-      donationsDiv.style.display = "block";
-      listenWebsocket(apiUrl);
+      donationsDiv.style.display = (active ? "block" : "none");
+      const myButton = document.getElementById('myButton');
+      myButton.textContent = (active ? 'Oink Notifications Are Active! Volume up!' : 'Click to activate audio and visual notifications again!');
+      notificationsActive = active;
     }
 
     // Attach the click event listener to the button
