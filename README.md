@@ -25,7 +25,9 @@ then in index.html, you should have:
 ```
 const apiUrl = "wss://legend.lnbits.com/api/v1/ws/c9168d53aa5942858354249f39f18de4";
 ```
-4) Create a LNURLp (= reusable payment string) in LNBits for the newly created wallet.
+4) Create a LNURLp(ay) link (= reusable payment string) in LNBits for the newly created wallet.
+
+Enable the LNURLp extension in LNBits, click "NEW PAY LINK" and use settings such as:
 - Wallet: choose the newly created lnbits wallet
 - Item description: "Donation to LightningPiggy.com" (users will see this in their wallet when they zap)
 - Lightning Address: oink (or whatever you like)
@@ -37,15 +39,17 @@ const apiUrl = "wss://legend.lnbits.com/api/v1/ws/c9168d53aa5942858354249f39f18d
 - Success message (optional): Oink! Thank you! Oink, oink!
 - Nostr: Enable nostr zaps
 
-5) Copy-paste the LNURL string from LNBits into this project's index.html file.
+5) Copy-paste the lightning:LNURL link from LNBits into this project's index.html file.
 Do the same for the lightning address (if you created one as part of the LNURLp setup).
 
-For example, if your LNURLp string is LNURL1DP68GURN8GHJ7MR9VAJKUEPWD3HXY6T5WVHXXMMD9AKXUATJD3CZ74RTDFNKZSSNL3E35
+For example, if your LNURLp link is lightning:LNURL1DP68GURN8GHJ7MR9VAJKUEPWD3HXY6T5WVHXXMMD9AKXUATJD3CZ74RTDFNKZSSNL3E35
 and your lightning address is oink@legend.lnbits.com then you should have in index.html something like:
 
 ```
 <a href="lightning:LNURL1DP68GURN8GHJ7MR9VAJKUEPWD3HXY6T5WVHXXMMD9AKXUATJD3CZ74RTDFNKZSSNL3E35" class="text-secondary"><img class="QR" src="QR.png"/></a>
 <a href="lightning:oink@legend.lnbits.com" class="text-secondary"><h2>oink@legend.lnbits.com</h2></a>
+
+6) Also replace this project's QR.png file with the QR code of the LNURL pay link. You can just right-click the QR code in LNBits and click "Save image as..."
 ```
 
 # How to use
