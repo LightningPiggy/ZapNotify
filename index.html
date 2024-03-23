@@ -92,56 +92,64 @@
   
   
   <script>
+    const apiUrl = "wss://legend.lnbits.com/api/v1/ws/c9168d53aa5942858354249f39f18de4";
+
     // Function to poll the URL for data
-    function pollData(url, interval) {
-      let previousData = null;
+    function listenWebsocket(url) {
+      let socket = new WebSocket(url);
+
+      socket.onopen = function(e) {
+        console.log("[open] Connection established");
+      };
       
-      setInterval(() => {
-        fetch(url)
-          .then(response => response.arrayBuffer())
-          .then(data => {
-            if (previousData !== null) {
-              //console.log("not null");
-              if (!arraysAreEqual(data, previousData)) {
-                //console.log("arrays not equal");
-                displayNotification("Data has changed!");
-      	        const notificationDiv = document.getElementById("notification");
-                notificationDiv.innerText += arrayBufferToString(data);
-	        const jsonFromThirdField = parseThirdFieldAsJSON(arrayBufferToString(data));
-                const amount = getAmountFromJSON(jsonFromThirdField);
-                let comment = getCommentFromJSON(jsonFromThirdField);
-                if (amount !== null) {
-                  console.log('Amount:', amount);
-                } else {
-                  console.log('Failed to get amount from JSON data.');
-                }
-      		displayHelloOverlay(amount, comment);
-              } else {
-                //console.log("arrays equal");
-              }
-            } else {
-                //console.log("previousData is null");
-            }
-                previousData = data;
-          })
-          .catch(error => {
-            console.error('Error fetching data:', error);
-          });
-      }, interval);
+      socket.onmessage = function(event) {
+        console.log(`[message] Data received from server: ${event.data}`);
+	// Example data: {"wallet_balance": 4936, "payment": {"checking_id": "037c1438b20ef4729b1d3dc252c2809dc2a2a2e641c7fb99fe4324e182f356b3", "pending": false, "amount": 1000000, "fee": 0, "memo": "zap2oink", "time": 1711226003, "bolt11": "lnbc10u1pjl70ynsp5mswj2j4ye2re60ufuh8pk62ffpw705d6676r4v33pg7866zr549spp5qd7pgw9jpm689xca8hp99s5qnhp29ghxg8rlhx07gvjwrqhn26eshp58ju5l0n4ykrc2q4shxp7lkurqj4pumlttzc53ts8n6xwnyzlh22sxqzjccqpjrzjqta942048v7qxh5x7pxwplhmtwfl0f25cq23jh87rhx7lgrwwvv86r90guqqnwgqqqqqqqqqqqqqqpcqyg9qxpqysgqvujxrahg2l48h8aredqsesqst3twfmpeemydg6ng9a24ykep25d4e6qjpvnutpedvwpfpqw36a5fwkq90nryzuaduhzq0ruz9snqlccqq9renr", "preimage": "0000000000000000000000000000000000000000000000000000000000000000", "payment_hash": "037c1438b20ef4729b1d3dc252c2809dc2a2a2e641c7fb99fe4324e182f356b3", "expiry": 1711226603.0, "extra": {"tag": "lnurlp", "link": "TkjgaB", "extra": "1000000", "comment": ["yes"], "lnaddress": "oink@legend.lnbits.com"}, "wallet_id": "c9168d53aa5942858354249f39f18de4", "webhook": null, "webhook_status": null}}
+	const jsonData = parseJSON(event.data);
+        if (typeof jsonData !== 'object' || jsonData === null) {
+          console.error('Invalid JSON data. Expected an object.');
+          return null;
+        }
+        if (!jsonData.hasOwnProperty('payment')) {
+          console.error('No "payment" key found in the JSON object.');
+          return null;
+        }
+
+	const amount = getAmountFromJSON(jsonData.payment);
+        if (amount !== null) {
+          console.log('Amount:', amount);
+        } else {
+          console.log('Failed to get amount from JSON data.');
+          return null;
+        }
+
+	let comment = "";
+        if (jsonData.payment.hasOwnProperty('extra')) {
+          console.log('"extra" key found in the JSON.payment object.');
+          comment = getCommentFromJSON(jsonData.payment.extra);
+        }
+
+	displayNotification("Payment came in!");
+        displayHelloOverlay(amount, comment);
+      };
+      
+      socket.onclose = function(event) {
+        if (event.wasClean) {
+          console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+        } else {
+          // e.g. server process killed or network down
+          // event.code is usually 1006 in this case
+          console.log('[close] Connection died');
+        }
+      };
+
+      socket.onerror = function(error) {
+        console.err(`[error]`);
+      };
+
     }
 
-    function parseThirdFieldAsJSON(csvRow) {
-      // Split the CSV row by the pipe delimiter
-      const fields = csvRow.split('|');
-      
-      // Ensure that there are at least three fields
-      if (fields.length < 4) {
-        console.error('Invalid CSV row. It should have at least three fields separated by |.');
-        return null;
-      }
-    
-      // Extract the third field and parse it as JSON
-      const thirdField = fields[3].trim(); // Trim to remove leading and trailing whitespace
+    function parseJSON(thirdField) {
       try {
         return JSON.parse(thirdField);
       } catch (error) {
@@ -151,12 +159,6 @@
     }
 
    function getCommentFromJSON(jsonData) {
-      // Check if jsonData is an object
-      if (typeof jsonData !== 'object' || jsonData === null) {
-        console.error('Invalid JSON data. Expected an object.');
-        return null;
-      }
-    
       // Check if the "amount" key exists in the JSON object
       if (!jsonData.hasOwnProperty('comment')) {
         console.error('No "comment" key found in the JSON object.');
@@ -169,12 +171,6 @@
 
 
     function getAmountFromJSON(jsonData) {
-      // Check if jsonData is an object
-      if (typeof jsonData !== 'object' || jsonData === null) {
-        console.error('Invalid JSON data. Expected an object.');
-        return null;
-      }
-    
       // Check if the "amount" key exists in the JSON object
       if (!jsonData.hasOwnProperty('amount')) {
         console.error('No "amount" key found in the JSON object.');
@@ -192,11 +188,6 @@
     
       // Return the amount value
       return amountValue/1000;
-    }
-
-    function arrayBufferToString(buffer) {
-      const decoder = new TextDecoder('utf-8'); // Assuming the encoding is UTF-8
-      return decoder.decode(buffer);
     }
 
     function displayHelloOverlay(amount, comment) {
@@ -226,31 +217,12 @@
 
     }
 
-    // Function to compare two array buffers
-    function arraysAreEqual(array1, array2) {
-      if (array1.byteLength !== array2.byteLength) {
-        return false;
-      }
-      const view1 = new DataView(array1);
-      const view2 = new DataView(array2);
-      for (let i = 0; i < array1.byteLength; i++) {
-        if (view1.getUint8(i) !== view2.getUint8(i)) {
-          return false;
-        }
-      }
-      return true;
-    }
-
-    // Start polling
-    const apiUrl = "https://oink.lightningpiggy.com/last.php";
-    const pollingInterval = 1000; // in milliseconds (e.g., every 5 seconds)
-
     // Function to handle the button click event
     function buttonClickHandler(event) {
       event.target.textContent = 'Oink Notifications Are Active! Volume up!';
       const donationsDiv = document.getElementById('donations');
       donationsDiv.style.display = "block";
-      pollData(apiUrl, pollingInterval);
+      listenWebsocket(apiUrl);
     }
 
     // Attach the click event listener to the button
