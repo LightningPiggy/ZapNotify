@@ -8,19 +8,45 @@ Part of https://LightningPiggy.com/
 
 # How to install and configure
 
-1) Copy the files in this folder to a webserver that supports PHP.
+1) Clone this project into a local folder on your PC or place the files into a webhosting service.
 
-2) Configure the LNURLp extension in an LNBits instance with the following settings:
-- Wallet: choose one of your lnbits wallets
+Tip: if you fork it in GitHub, and call the fork "<yourusername>.github.io" (without the "quotes") then
+it will be publicly hosted by GitHub on https://yourusername.github.io (where yourusername is your username).
+
+Read more about this, including custom domains, at https://pages.github.com/
+
+2) Create a wallet in LNBits (demo server: https://legend.lnbits.com)
+
+3) Copy-paste the "Wallet ID" from LNBits into this project's index.html file, in the apiUrl, on the first line below <script>.
+
+For example, if your LNBits Wallet ID is c9168d53aa5942858354249f39f18de4
+then in index.html, you should have:
+
+```
+const apiUrl = "wss://legend.lnbits.com/api/v1/ws/c9168d53aa5942858354249f39f18de4";
+```
+4) Create a LNURLp (= reusable payment string) in LNBits for the newly created wallet.
+- Wallet: choose the newly created lnbits wallet
 - Item description: "Donation to LightningPiggy.com" (users will see this in their wallet when they zap)
 - Lightning Address: oink (or whatever you like)
 - Min: 1000 (default value that wallet will show)
 - Max: 100000000 (is this too low?)
 - Currency: satoshis
 - Comment maximum characters: 255
-- Webhook URL: https://yourwebsite.com/log.php (make sure this points to your own webserver's URL where you installed log.php)
+- Webhook URL: not needed
 - Success message (optional): Oink! Thank you! Oink, oink!
 - Nostr: Enable nostr zaps
+
+5) Copy-paste the LNURL string from LNBits into this project's index.html file.
+Do the same for the lightning address (if you created one as part of the LNURLp setup).
+
+For example, if your LNURLp string is LNURL1DP68GURN8GHJ7MR9VAJKUEPWD3HXY6T5WVHXXMMD9AKXUATJD3CZ74RTDFNKZSSNL3E35
+and your lightning address is oink@legend.lnbits.com then you should have in index.html something like:
+
+```
+<a href="lightning:LNURL1DP68GURN8GHJ7MR9VAJKUEPWD3HXY6T5WVHXXMMD9AKXUATJD3CZ74RTDFNKZSSNL3E35" class="text-secondary"><img class="QR" src="QR.png"/></a>
+<a href="lightning:oink@legend.lnbits.com" class="text-secondary"><h2>oink@legend.lnbits.com</h2></a></a>
+```
 
 # How to use
 
@@ -28,22 +54,13 @@ Open the webpage where you installed the index.html file, such as: https://yourw
 
 Click the "Enable audio and visual notifications" button to allow the browser to play audio (blocked if the user hasn't interacted with the page) and to start polling (each second) for new donations/zaps.
 
-# How to test
-
-To simulate the LNBits server calling the webhook URL, you can use curl:
-
-```
-curl -d '{"payment_hash": "cc1da5c4d0adb505807211cf56b25ae590a05e72ca6c73d9054b361fd764b8dd", "payment_request": "lnbc10n1pjumhmtsp5725pqgsf79jdmdwk2dpm28qlcn5r48vpnhy8qz0rq26ntknwxuuqpp5esw6t3xs4k6stqrjz884dvj6ukg2qhnjefk88kg9fvmpl4myhrwshp5f9g4tqed47kzzg5tgyyum25qr3mwjnlr5vn46j2temrw6xshez0qxqzjccqpjrzjqgj79x7039lj9k04g6khzxzlj5vak5udfp9jl5h290szug94cu3ykz6y2gqqdwgqqyqqqqryqqqqqvsqyg9qxpqysgq7fchu5ldrjtsrru7w7sewd54v6cdfd9uvcwwegpdk4325l7yewlh4j3kknlm0cq92etnljjaryjfnswkn9nl3usvk2w2sudy3kfuzdcql98mzp", "amount": 1234, "comment": "testing the webhook with curl", "webhook_data": "", "lnurlp": "jkasasqwe", "body": ""}' https://yourwebsite.com/log.php
-```
+Note that you can also install the applications as a Progressive Web App.
+Do this, in Chrome for example, by clicking the menu in the top right (three dots) and choosing "Install LightningPiggy Oink..."
 
 # How it works
 
-When a user makes a donation from a Bitcoin Lightning wallet, the wallet requests an invoice using [LNURLp](https://github.com/lnbits/lnurlp).
+The index.html file opens a websocket to LNBits using Javascript.
 
-When they pay the invoice, LNBits calls the webhook URL (https://yourwebsite.com/log.php) and POSTs the payment details (amount, comment) as a JSON object.
+LNBits sends a notification over that websocket when a payment comes in.
 
-The log.php script logs the details of the POST request into a file (payment_metrics.csv).
-
-When a user has the webpage open and has clicked the button, the webpage polls the https://yourwebsite.com/last.php script each second to get the last line of payment_metrics.csv.
-
-When this last line changes (meaning a new donation/zap came in) it parses that line (to get payment details), plays audio and displays the donation amount+comment to the user for a few seconds.
+The index.html parses the incoming payment data (amount, comment), plays an MP3 and shows a message and the comment to the user for 10 seconds.
