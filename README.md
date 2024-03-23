@@ -10,7 +10,7 @@ Part of https://LightningPiggy.com/
 
 1) Clone this project into a local folder on your PC or place the files into a webhosting service.
 
-Tip: if you fork it in GitHub, and call the fork "<yourusername>.github.io" (without the "quotes") then
+Tip: if you fork it in GitHub, and call the fork "\<yourusername\>.github.io" (without the "quotes") then
 it will be publicly hosted by GitHub on https://yourusername.github.io (where yourusername is your username).
 
 Read more about this, including custom domains, at https://pages.github.com/
@@ -45,7 +45,7 @@ and your lightning address is oink@legend.lnbits.com then you should have in ind
 
 ```
 <a href="lightning:LNURL1DP68GURN8GHJ7MR9VAJKUEPWD3HXY6T5WVHXXMMD9AKXUATJD3CZ74RTDFNKZSSNL3E35" class="text-secondary"><img class="QR" src="QR.png"/></a>
-<a href="lightning:oink@legend.lnbits.com" class="text-secondary"><h2>oink@legend.lnbits.com</h2></a></a>
+<a href="lightning:oink@legend.lnbits.com" class="text-secondary"><h2>oink@legend.lnbits.com</h2></a>
 ```
 
 # How to use
