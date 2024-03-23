@@ -50,9 +50,10 @@ and your lightning address is oink@legend.lnbits.com then you should have in ind
 
 # How to use
 
-Open the webpage where you installed the index.html file, such as: https://yourwebsite.com/
+If the files are hosted somewhere (such as https://yourusername.github.io/) then open that website.
+Or if you have them locally on your PC, open the index.html file in a webbrowser.
 
-Click the "Enable audio and visual notifications" button to allow the browser to play audio (blocked if the user hasn't interacted with the page) and to start polling (each second) for new donations/zaps.
+Click the "Enable audio and visual notifications" button to allow the browser to play audio (blocked if the user hasn't interacted with the page) and to connect the websocket and wait for incoming payments.
 
 Note that you can also install the applications as a Progressive Web App.
 Do this, in Chrome for example, by clicking the menu in the top right (three dots) and choosing "Install LightningPiggy Oink..."
