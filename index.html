@@ -92,7 +92,7 @@
   
   
   <script>
-    const apiUrl = "wss://legend.lnbits.com/api/v1/ws/c9168d53aa5942858354249f39f18de4";
+    const apiUrl = "wss://demo.lnpiggy.com/api/v1/ws/d3e6a32c634a4328baa24c84fccfa4dc";
     let notificationsActive = false;
     let socket = null;
 
@@ -107,7 +107,7 @@
       
       socket.onmessage = function(event) {
         console.log(`[message] Data received from server: ${event.data}`);
-	// Example data: {"wallet_balance": 4936, "payment": {"checking_id": "037c1438b20ef4729b1d3dc252c2809dc2a2a2e641c7fb99fe4324e182f356b3", "pending": false, "amount": 1000000, "fee": 0, "memo": "zap2oink", "time": 1711226003, "bolt11": "lnbc10u1pjl70ynsp5mswj2j4ye2re60ufuh8pk62ffpw705d6676r4v33pg7866zr549spp5qd7pgw9jpm689xca8hp99s5qnhp29ghxg8rlhx07gvjwrqhn26eshp58ju5l0n4ykrc2q4shxp7lkurqj4pumlttzc53ts8n6xwnyzlh22sxqzjccqpjrzjqta942048v7qxh5x7pxwplhmtwfl0f25cq23jh87rhx7lgrwwvv86r90guqqnwgqqqqqqqqqqqqqqpcqyg9qxpqysgqvujxrahg2l48h8aredqsesqst3twfmpeemydg6ng9a24ykep25d4e6qjpvnutpedvwpfpqw36a5fwkq90nryzuaduhzq0ruz9snqlccqq9renr", "preimage": "0000000000000000000000000000000000000000000000000000000000000000", "payment_hash": "037c1438b20ef4729b1d3dc252c2809dc2a2a2e641c7fb99fe4324e182f356b3", "expiry": 1711226603.0, "extra": {"tag": "lnurlp", "link": "TkjgaB", "extra": "1000000", "comment": ["yes"], "lnaddress": "oink@legend.lnbits.com"}, "wallet_id": "c9168d53aa5942858354249f39f18de4", "webhook": null, "webhook_status": null}}
+	// Example data: {"wallet_balance": 4936, "payment": {"checking_id": "037c1438b20ef4729b1d3dc252c2809dc2a2a2e641c7fb99fe4324e182f356b3", "pending": false, "amount": 1000000, "fee": 0, "memo": "zap2oink", "time": 1711226003, "bolt11": "lnbc10u1pjl70ynsp5mswj2j4ye2re60ufuh8pk62ffpw705d6676r4v33pg7866zr549spp5qd7pgw9jpm689xca8hp99s5qnhp29ghxg8rlhx07gvjwrqhn26eshp58ju5l0n4ykrc2q4shxp7lkurqj4pumlttzc53ts8n6xwnyzlh22sxqzjccqpjrzjqta942048v7qxh5x7pxwplhmtwfl0f25cq23jh87rhx7lgrwwvv86r90guqqnwgqqqqqqqqqqqqqqpcqyg9qxpqysgqvujxrahg2l48h8aredqsesqst3twfmpeemydg6ng9a24ykep25d4e6qjpvnutpedvwpfpqw36a5fwkq90nryzuaduhzq0ruz9snqlccqq9renr", "preimage": "0000000000000000000000000000000000000000000000000000000000000000", "payment_hash": "037c1438b20ef4729b1d3dc252c2809dc2a2a2e641c7fb99fe4324e182f356b3", "expiry": 1711226603.0, "extra": {"tag": "lnurlp", "link": "TkjgaB", "extra": "1000000", "comment": ["yes"], "lnaddress": "oink@demo.lnpiggy.com"}, "wallet_id": "c9168d53aa5942858354249f39f18de4", "webhook": null, "webhook_status": null}}
 	const jsonData = parseJSON(event.data);
         if (typeof jsonData !== 'object' || jsonData === null) {
           console.error('Invalid JSON data. Expected an object.');
