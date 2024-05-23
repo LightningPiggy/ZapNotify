@@ -15,7 +15,7 @@ it will be publicly hosted by GitHub on https://yourusername.github.io (where yo
 
 Read more about this, including custom domains, at https://pages.github.com/
 
-2) Create a wallet in LNBits (demo server: https://legend.lnbits.com)
+2) Create a wallet on the LightningPiggy LNBits demo server: https://demo.lnpiggy.com
 
 3) Copy-paste the "Wallet ID" from LNBits into this project's index.html file, in the apiUrl, on the first line below <script>.
 
@@ -23,7 +23,7 @@ For example, if your LNBits Wallet ID is c9168d53aa5942858354249f39f18de4
 then in index.html, you should have:
 
 ```
-const apiUrl = "wss://legend.lnbits.com/api/v1/ws/c9168d53aa5942858354249f39f18de4";
+const apiUrl = "wss://demo.lnpiggy.com/api/v1/ws/c9168d53aa5942858354249f39f18de4";
 ```
 4) Create a LNURLp(ay) link (= reusable payment string) in LNBits for the newly created wallet.
 
@@ -43,11 +43,11 @@ Enable the LNURLp extension in LNBits, click "NEW PAY LINK" and use settings suc
 Do the same for the lightning address (if you created one as part of the LNURLp setup).
 
 For example, if your LNURLp link is lightning:LNURL1DP68GURN8GHJ7MR9VAJKUEPWD3HXY6T5WVHXXMMD9AKXUATJD3CZ74RTDFNKZSSNL3E35
-and your lightning address is oink@legend.lnbits.com then you should have in index.html something like:
+and your lightning address is oink@demo.lnpiggy.com then you should have in index.html something like:
 
 ```
 <a href="lightning:LNURL1DP68GURN8GHJ7MR9VAJKUEPWD3HXY6T5WVHXXMMD9AKXUATJD3CZ74RTDFNKZSSNL3E35" class="text-secondary"><img class="QR" src="QR.png"/></a>
-<a href="lightning:oink@legend.lnbits.com" class="text-secondary"><h2>oink@legend.lnbits.com</h2></a>
+<a href="lightning:oink@demo.lnpiggy.com" class="text-secondary"><h2>oink@demo.lnpiggy.com</h2></a>
 
 6) Also replace this project's QR.png file with the QR code of the LNURL pay link. You can just right-click the QR code in LNBits and click "Save image as..."
 ```
