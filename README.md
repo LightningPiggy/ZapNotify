@@ -17,13 +17,13 @@ Read more about this, including custom domains, at https://pages.github.com/
 
 2) Create a wallet on the LightningPiggy LNBits demo server: https://demo.lnpiggy.com
 
-3) Copy-paste the "Wallet ID" from LNBits into this project's index.html file, in the apiUrl, on the first line below <script>.
+3) Copy-paste the Wallet's "Invoice/Read Key" from LNBits into this project's index.html file, in the apiUrl, on the first line below <script>.
 
-For example, if your LNBits Wallet ID is c9168d53aa5942858354249f39f18de4
+For example, if your LNBits Wallet's Invoice/Read Key is 1c1077016ce746b6beae47c5890a8422
 then in index.html, you should have:
 
 ```
-const apiUrl = "wss://demo.lnpiggy.com/api/v1/ws/c9168d53aa5942858354249f39f18de4";
+const apiUrl = "wss://demo.lnpiggy.com/api/v1/ws/1c1077016ce746b6beae47c5890a8422";
 ```
 4) Create a LNURLp(ay) link (= reusable payment string) in LNBits for the newly created wallet.
 
@@ -42,11 +42,11 @@ Enable the LNURLp extension in LNBits, click "NEW PAY LINK" and use settings suc
 5) Copy-paste the lightning:LNURL link from LNBits into this project's index.html file.
 Do the same for the lightning address (if you created one as part of the LNURLp setup).
 
-For example, if your LNURLp link is lightning:LNURL1DP68GURN8GHJ7MR9VAJKUEPWD3HXY6T5WVHXXMMD9AKXUATJD3CZ74RTDFNKZSSNL3E35
+For example, if your LNURLp link is lightning:LNURL1DP68GURN8GHJ7ER9D4HJUMRWWP5KWEME9E3K7MF0D3H82UNVWQHNVKN8FFE85WY0TEP
 and your lightning address is oink@demo.lnpiggy.com then you should have in index.html something like:
 
 ```
-<a href="lightning:LNURL1DP68GURN8GHJ7MR9VAJKUEPWD3HXY6T5WVHXXMMD9AKXUATJD3CZ74RTDFNKZSSNL3E35" class="text-secondary"><img class="QR" src="QR.png"/></a>
+<a href="lightning:LNURL1DP68GURN8GHJ7ER9D4HJUMRWWP5KWEME9E3K7MF0D3H82UNVWQHNVKN8FFE85WY0TEP" class="text-secondary"><img class="QR" src="QR.png"/></a>
 <a href="lightning:oink@demo.lnpiggy.com" class="text-secondary"><h2>oink@demo.lnpiggy.com</h2></a>
 
 6) Also replace this project's QR.png file with the QR code of the LNURL pay link. You can just right-click the QR code in LNBits and click "Save image as..."
